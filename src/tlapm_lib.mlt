@@ -1,0 +1,16 @@
+(*
+ * Copyright (C) 2008-2013  INRIA and Microsoft Corporation
+ *)
+
+open Kaputt.Abbreviations;;
+
+let t1 =
+  Test.make_simple_test ~title:"fail hard" ( fun () -> Assert.equal "a" "b")
+
+let kaputt_output =
+  Test.Text_output stdout
+
+let () =
+  Test.run_tests ~output:kaputt_output [t1]
+
+faaaaaaaaa

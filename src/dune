@@ -1,9 +1,40 @@
 (executable
   (name tlapm)
   (public_name tlapm)
-  (modules (:standard setup_paths))
-  (libraries unix str dune-site)
-  (foreign_stubs (language c) (names sysconf_stubs)))
+  (modules tlapm load setup_paths)
+  (libraries tlapm_lib dune-site))
+
+; This library is separated from the executable mainly to be able to run the inline "kaputt" tests defined in the mlt files.
+(library
+  (name tlapm_lib)
+  (modules (:standard \ tlapm load test_schedule why3_interface setup_paths abstractor)) ; TODO: Compare with the makefiles.
+  (libraries unix str)
+  (foreign_stubs (language c) (names sysconf_stubs))
+  ; (preprocess (action (run cat %{input-file})))
+  ; (preprocess (action (system "cat %{input-file} ; env")))
+  ; (preprocess (action (system "cat %{input-file} ; echo xx-%{context_name}-%{profile}")))
+  (inline_tests
+    (backend tlapm_kaputt_tests)
+    (deps (glob_files_rec "*.mlt"))
+    (executable
+      (flags -I +kaputt -pp "%{ocaml_where}/../kaputt/kaputt_pp.byte on cat")
+    )
+  )
+)
+
+; This is the dune inline test backend to run the kaputt tests.
+(library
+  (name tlapm_kaputt_tests)
+  (modules ())
+  (libraries tlapm_lib)
+  (inline_tests.backend
+    ; (generate_runner (run echo "open Tlapm_lib ;; \n let () = Printf.printf \"All kaputt!\\n\""))
+    (generate_runner (run echo "let () = Printf.printf \"All kaputt!\\n\""))
+    (runner_libraries tlapm_lib kaputt)
+  ))
+
+; (test
+;   (name tlapm_kaputt_tests))
 
 (ocamllex alexer)
 
@@ -19,3 +50,9 @@
   (dev
     (flags (:standard -w +a-4-7-9-27-29-30-32..42-44-45-48-50-52-60-66..70))))
 
+; To run the kaputt-based tests.
+; (library
+;  (name kaputt_tests)
+;  (inline_tests (flags (-foo bar)))
+;  (preprocess (pps kaputt_pp on))
+;  (libraries kaputt))

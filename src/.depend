@@ -1853,56 +1853,12 @@ tlapm_args.cmx: tlapm_args.mlt \
     backend.cmx \
     tlapm_args.cmi
 tlapm.cmo: tlapm.mlt \
-    util/util.cmi \
-    backend/types.cmi \
-    backend/toolbox.cmi \
-    tlapm_args.cmi \
-    tla_parser.cmi \
-    util/timing.cmi \
+    tlapm_lib.cmi \
     dune_site_mock/setup_paths.cmi \
-    backend/schedule.cmi \
-    util/property.cmi \
-    proof.cmi \
-    backend/prep.cmi \
-    params.cmi \
-    module.cmi \
-    method.cmi \
-    loc.cmi \
-    backend/isabelle.cmi \
-    backend/fpfile.cmi \
-    util/ext.cmi \
-    expr.cmi \
-    errors.cmi \
-    util/deque.cmi \
-    ctx.cmi \
-    config.cmi \
-    backend.cmi \
     tlapm.cmi
 tlapm.cmx: tlapm.mlt \
-    util/util.cmx \
-    backend/types.cmx \
-    backend/toolbox.cmx \
-    tlapm_args.cmx \
-    tla_parser.cmx \
-    util/timing.cmx \
+    tlapm_lib.cmx \
     dune_site_mock/setup_paths.cmx \
-    backend/schedule.cmx \
-    util/property.cmx \
-    proof.cmx \
-    backend/prep.cmx \
-    params.cmx \
-    module.cmx \
-    method.cmx \
-    loc.cmx \
-    backend/isabelle.cmx \
-    backend/fpfile.cmx \
-    util/ext.cmx \
-    expr.cmx \
-    errors.cmx \
-    util/deque.cmx \
-    ctx.cmx \
-    config.cmx \
-    backend.cmx \
     tlapm.cmi
 sysconf.cmi :
 util/ext.cmi :
