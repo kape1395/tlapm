@@ -120,6 +120,18 @@ module Make (CB : Callbacks) = struct
                ~workDoneProgress:false
                ~codeActionKinds:[ CodeActionKind.Other "proof-state" ]
                ()))
+          (*~documentHighlightProvider:
+               (* TODO: The Highlight is based on the cursor position. *)
+               (`DocumentHighlightOptions (DocumentHighlightOptions.create ()))
+          *)
+        ~semanticTokensProvider:
+          (* TODO: Can't find if a background color can be changed. FG updates will interfere with TLA syntax. *)
+          (`SemanticTokensOptions
+            (SemanticTokensOptions.create ~full:(`Bool true) ~range:false
+               ~legend:
+                 (SemanticTokensLegend.create ~tokenTypes:[ "tlaSequent" ]
+                    ~tokenModifiers:[ "proved"; "failed"; "omitted"; "pending" ])
+               ()))
         ()
     in
     let server_version =
@@ -241,6 +253,10 @@ module Make (CB : Callbacks) = struct
     | Ok (E (CodeActionResolve params)) ->
         handle_jsonrpc_req_code_action_resolve jsonrpc_req params cb_state
     | Ok (E Shutdown) -> handle_jsonrpc_req_shutdown jsonrpc_req cb_state
+    | Ok (E (SemanticTokensFull _)) ->
+        (* TODO: That's only an experiment. *)
+        let tokens = SemanticTokens.create ~data:[| 0; 0; 10; 0; 3 |] () in
+        reply_ok jsonrpc_req (SemanticTokens.yojson_of_t tokens) cb_state
     | Ok (E (UnknownRequest unknown)) -> (
         match unknown.meth with
         | "textDocument/diagnostic" -> (
